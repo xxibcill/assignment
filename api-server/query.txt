@@ -1,0 +1,1 @@
+INSERT INTO USERS VALUES('usercl5b7sw7w00083a6atsvah8er','Brandy_Maggio79','bl42ugc33s','https://api.lorem.space/image/face?w=150&h=150&hash=4v7qbb1g','2021-06-08 11:22:30');

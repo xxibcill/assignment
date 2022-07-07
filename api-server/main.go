@@ -4,11 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"math"
 	"net/http"
 	"os"
 	"sync"
-	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -31,7 +29,6 @@ var (
 
 func main() {
 	db = getDB()
-	// insert_(db)
 
 	r := gin.Default()
 	r.Use(cors.Default())
@@ -41,7 +38,6 @@ func main() {
 }
 
 func insertUsers(c *gin.Context) {
-
 	var user User
 	e := c.BindJSON(&user)
 	if e != nil {
@@ -61,33 +57,11 @@ func insertUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Success"})
 }
 
-func getVoteData(db *sql.DB) {
-	fmt.Println("getVoteData")
-	t := getAllUsers(db)
-	if err != nil {
-		log.Printf("renderIndex: failed to read current totals: %v", err)
-		return
-	}
-
-	log.Printf("t: %v", t)
-}
-
-func insert_(db *sql.DB) {
-
-	insertVote := "INSERT INTO votes(candidate, created_at) VALUES($1, NOW())"
-	_, err := db.Exec(insertVote, "TABS")
-	if err != nil {
-		log.Printf("saveVote: unable to save vote: %v", err)
-	}
-}
-
 // mustConnect creates a connection to the database based on environment
 // variables. Setting the optional DB_CONN_TYPE environment variable to UNIX or
 // TCP will use the corresponding connection method. By default, the connector
 // is used.
 func mustConnect() *sql.DB {
-	fmt.Println("mustConnect")
-
 	// Use a TCP socket when INSTANCE_HOST (e.g., 127.0.0.1) is defined
 	fmt.Println(os.Getenv("INSTANCE_HOST"))
 	if os.Getenv("INSTANCE_HOST") != "" {
@@ -152,64 +126,4 @@ func getAllUsers(db *sql.DB) []User {
 	}
 
 	return result
-}
-
-// currentTotals retrieves all voting data from the database.
-func currentTotals(db *sql.DB) (int, error) {
-	fmt.Println("currentTotals")
-
-	var (
-		count int
-	)
-
-	err := db.QueryRow("SELECT * FROM USERS").Scan(&count)
-	if err != nil {
-		return 0, fmt.Errorf("DB.QueryRow: %v", err)
-	}
-
-	log.Printf("tabs: %v", count)
-
-	return count, nil
-}
-
-// formatMargin calculates the difference between votes and returns a human
-// friendly margin (e.g., 2 votes)
-func formatMargin(a, b int) string {
-	diff := int(math.Abs(float64(a - b)))
-	margin := fmt.Sprintf("%d votes", diff)
-	// remove pluralization when diff is just one
-	if diff == 1 {
-		margin = "1 vote"
-	}
-	return margin
-}
-
-// vote contains a single row from the votes table in the database. Each vote
-// includes a candidate ("TABS" or "SPACES") and a timestamp.
-type vote struct {
-	Candidate string
-	VoteTime  time.Time
-}
-
-// recentVotes returns the last five votes cast.
-func recentVotes(db *sql.DB) ([]vote, error) {
-	rows, err := db.Query("SELECT candidate, created_at FROM votes ORDER BY created_at DESC LIMIT 5")
-	if err != nil {
-		return nil, fmt.Errorf("DB.Query: %v", err)
-	}
-	defer rows.Close()
-
-	var votes []vote
-	for rows.Next() {
-		var (
-			candidate string
-			voteTime  time.Time
-		)
-		err := rows.Scan(&candidate, &voteTime)
-		if err != nil {
-			return nil, fmt.Errorf("Rows.Scan: %v", err)
-		}
-		votes = append(votes, vote{Candidate: candidate, VoteTime: voteTime})
-	}
-	return votes, nil
 }

@@ -32,7 +32,10 @@ func main() {
 
 	r := gin.Default()
 	r.Use(cors.Default())
-	r.POST("/user", insertUsers)
+	r.POST("/insert", insertUsers)
+	r.GET("/count", getUsersCount)
+	r.GET("/all", serveUsersAll)
+	r.GET("/limit", serveUsersLimit)
 
 	r.Run()
 }
@@ -51,10 +54,10 @@ func insertUsers(c *gin.Context) {
 	// [END cloud_sql_postgres_databasesql_connection]
 
 	if err != nil {
-		log.Printf("saveVote: unable to save vote: %v", err)
+		log.Printf("saveVote: unable to insert user: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Success"})
+	c.JSON(http.StatusOK, gin.H{"message": "Success", "method": "insertUsers"})
 }
 
 // mustConnect creates a connection to the database based on environment
@@ -104,11 +107,31 @@ func getDB() *sql.DB {
 	return db
 }
 
-func getAllUsers(db *sql.DB) []User {
+func serveUsersLimit(c *gin.Context) {
+	limit := c.DefaultQuery("limit", "50")
+	users, err := getUsersLimit(db, limit)
+	if err != nil {
+		log.Printf("saveVote: unable to get user count: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Success", "method": "serveUsersLimit", "limit": limit, "users": users})
+}
+
+func serveUsersAll(c *gin.Context) {
+	users, err := getAllUsers(db)
+	if err != nil {
+		log.Printf("saveVote: unable to get user count: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Success", "method": "serveUsersAll", "users": users})
+}
+
+func getAllUsers(db *sql.DB) ([]User, error) {
 	queryString := "SELECT * FROM USERS"
 	row, err := db.Query(queryString)
 	if err != nil {
 		log.Fatal(err)
+		return []User{}, err
 	}
 	defer row.Close()
 
@@ -125,5 +148,51 @@ func getAllUsers(db *sql.DB) []User {
 		result = append(result, ingredient)
 	}
 
-	return result
+	return result, nil
+}
+
+func getUsersLimit(db *sql.DB, limit string) ([]User, error) {
+	queryString := "SELECT * FROM USERS order by joined_date desc limit $1"
+
+	row, err := db.Query(queryString, limit)
+	if err != nil {
+		log.Fatal(err)
+		return []User{}, err
+	}
+	defer row.Close()
+
+	result := []User{}
+
+	for row.Next() { // Iterate and fetch the records from result cursor
+		var id string
+		var username string
+		var password string
+		var profile_image string
+		var joined_date string
+		row.Scan(&id, &username, &password, &profile_image, &joined_date)
+		ingredient := User{id, username, password, profile_image, joined_date}
+		result = append(result, ingredient)
+	}
+
+	return result, nil
+}
+
+func getUsersCount(c *gin.Context) {
+	queryString := "SELECT count(*) FROM USERS"
+	row, err := db.Query(queryString)
+	if err != nil {
+		log.Printf("saveVote: unable to get user count: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+	defer row.Close()
+
+	var count int
+	row.Next()
+	row.Scan(&count)
+
+	if err != nil {
+		log.Printf("saveVote: unable to get user count: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Success", "count": count})
 }

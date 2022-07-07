@@ -4,6 +4,7 @@ import { UserGenerator } from './UserGenerator'
 function App() {
   return (
     <div className="App">
+      
       <UserGenerator />
     </div>
   )

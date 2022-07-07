@@ -1,5 +1,6 @@
 import React from 'react'
 import { useUserGenerator } from './logic'
+import moment from 'moment';
 
 export const UserGenerator: React.FC = () => {
   const { generate, userinfo } = useUserGenerator()
@@ -10,6 +11,7 @@ export const UserGenerator: React.FC = () => {
         Generate
       </button>
       <div>{userinfo && <textarea rows={10} value={JSON.stringify(userinfo, null, '\t')} />}</div>
+      <pre>{}</pre>
     </>
   )
 }

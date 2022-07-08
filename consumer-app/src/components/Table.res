@@ -19,10 +19,31 @@ let make = () => {
                 <th>{"Password" -> React.string}</th>
                 <th>{"Joined Date" -> React.string}</th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             {MockData.data -> Belt.Array.map((user) => <Row user/>) -> React.array}
         </tbody>
+
+        // <tfoot>
+        //     <tr>
+        //         <td>
+        //             <TextButton >
+        //                 { "prev" -> React.string }
+        //             </TextButton>
+        //         </td>
+        //         <td></td>
+        //         <td></td>
+        //         <td>{ "1" -> React.string }</td>
+        //         <td></td>
+        //         <td></td>
+        //         <td>
+        //             <TextButton >
+        //                 { "next" -> React.string }
+        //             </TextButton>
+        //         </td>
+        //     </tr>
+        // </tfoot>
     </table>
 }

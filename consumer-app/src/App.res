@@ -1,6 +1,7 @@
 let container = Emotion.css({
-  "width": "100vw",
-  "height": "100vh",
+  "minWidth": "100vw",
+  "minHeight": "100vh",
+  "padding": "30px",
   "display": "flex",
   "justifyContent": "center",
   "alignItems": "center",

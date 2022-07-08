@@ -30,7 +30,14 @@ let make = (~user:user) => {
         <td>{ user["password"] -> React.string }</td>
         <td>{ user["joined_date"] -> React.string }</td>
         <td>
-            <Icon.G />
+            <TextButton >
+                { "edit" -> React.string }
+            </TextButton>
+        </td>
+        <td>
+            <TextButton color="red">
+                { "delete" -> React.string }
+            </TextButton>
         </td>
     </tr>
 }

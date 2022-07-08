@@ -68,5 +68,6 @@ let data = [
             "password": "2eldhe6chj",
             "profile_image": "https://api.lorem.space/image/face?w=150&h=150&hash=ff855wo2",
             "joined_date": "2021-05-31T10:36:27Z"
-        }
+        },
+        
     ]

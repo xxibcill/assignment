@@ -11,7 +11,7 @@ let container = Emotion.css({
 let make = () => {
   <Theme.Provider value={Theme.initialValue}>
     <div className={container}>
-      <Calculator/>
+      <Table/>
     </div>
   </Theme.Provider>
 }

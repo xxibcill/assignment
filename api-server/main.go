@@ -247,7 +247,7 @@ func deleteUser(c *gin.Context) {
 	}
 
 	// check if id provided
-	if len(user.Id) > 0 {
+	if len(user.Id) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "id must be provided"})
 	}
 

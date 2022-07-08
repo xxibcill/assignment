@@ -32,10 +32,12 @@ func main() {
 
 	r := gin.Default()
 	r.Use(cors.Default())
-	r.POST("/insert", insertUsers)
+	r.POST("/user", insertUsers)
 	r.GET("/count", getUsersCount)
 	r.GET("/all", serveUsersAll)
 	r.GET("/limit", serveUsersLimit)
+	r.PATCH("/user", updateUser)
+	r.DELETE("/user", deleteUser)
 
 	r.Run()
 }
@@ -195,4 +197,66 @@ func getUsersCount(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Success", "count": count})
+}
+
+func getUpdateQuery(user User) (querystring string) {
+	querystring = "UPDATE USERS SET "
+
+	if len(user.Username) > 0 {
+		querystring = querystring + "username='" + user.Username + "', "
+	}
+
+	if len(user.Password) > 0 {
+		querystring = querystring + "password='" + user.Password + "', "
+	}
+
+	// remove trailing comma
+	if querystring[len(querystring)-2:len(querystring)-1] == "," {
+		querystring = querystring[:len(querystring)-2]
+	}
+
+	return querystring + " WHERE id = $1"
+}
+
+func updateUser(c *gin.Context) {
+	var user User
+	e := c.BindJSON(&user)
+	if e != nil {
+		fmt.Println(e)
+	}
+	// check if id provided
+	if len(user.Id) > 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "id must be provided"})
+	}
+
+	querystring := getUpdateQuery(user)
+	_, err := db.Exec(querystring, user.Id)
+
+	if err != nil {
+		log.Printf("saveVote: unable to update user: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Success", "method": "updateUser"})
+}
+
+func deleteUser(c *gin.Context) {
+	var user User
+	e := c.BindJSON(&user)
+	if e != nil {
+		fmt.Println(e)
+	}
+
+	// check if id provided
+	if len(user.Id) > 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "id must be provided"})
+	}
+
+	querystring := "DELETE FROM USERS WHERE id=$1"
+	_, err := db.Exec(querystring, user.Id)
+
+	if err != nil {
+		log.Printf("saveVote: unable to delete user: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Success", "method": "deleteUser"})
 }

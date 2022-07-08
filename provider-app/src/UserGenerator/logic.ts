@@ -15,7 +15,7 @@ interface UserProps {
 
 export const useUserGenerator = () => {
   const [userinfo, setUserinfo] = useState<UserProps | null>(null)
-
+  
   const unixtimeToPostgrestimestamp = (date:Date) => moment(date).format("YYYY-MM-DD HH:mm:ss"); 
 
   const generate = () => {
@@ -26,13 +26,13 @@ export const useUserGenerator = () => {
       profile_image: `https://api.lorem.space/image/face?w=150&h=150&hash=${faker.random.alphaNumeric(
         8
       )}`,
-      joined_date: unixtimeToPostgrestimestamp(randomDate(new Date(2019, 0, 1), new Date())),
+      joined_date: randomDate(new Date(2019, 0, 1), new Date()),
     }
 
     axios({
       method: 'post',
-      url: 'http://localhost:8080/user',
-      data: user
+      url: 'https://run-sql-xliijuge3q-dt.a.run.app/insert',
+      data: {...user,joined_date: unixtimeToPostgrestimestamp(user.joined_date as Date)}
     })
     .then((response)=>{
       console.log(response);

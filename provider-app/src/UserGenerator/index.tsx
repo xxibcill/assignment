@@ -1,6 +1,6 @@
 import React from 'react'
 import { useUserGenerator } from './logic'
-import moment from 'moment';
+import UserView from './UserView'
 
 export const UserGenerator: React.FC = () => {
   const { generate, userinfo } = useUserGenerator()
@@ -10,8 +10,15 @@ export const UserGenerator: React.FC = () => {
       <button style={{ fontSize: 24, marginBottom: 40 }} onClick={generate}>
         Generate
       </button>
-      <div>{userinfo && <textarea rows={10} value={JSON.stringify(userinfo, null, '\t')} />}</div>
-      <pre>{}</pre>
+      {
+        userinfo && <UserView
+          id={userinfo.id}
+          username={userinfo.username}
+          password={userinfo.password}
+          profile_image={userinfo.profile_image}
+          joined_date={userinfo.joined_date as Date}
+        /> 
+      }
     </>
   )
 }

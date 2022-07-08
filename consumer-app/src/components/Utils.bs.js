@@ -3,7 +3,7 @@
 
 var React = require("react");
 
-function initialValue_1(f) {
+function initialValue_1(param) {
   
 }
 

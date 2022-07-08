@@ -29,5 +29,8 @@ let make = (~user:user) => {
         <td>{ user["username"] -> React.string }</td>
         <td>{ user["password"] -> React.string }</td>
         <td>{ user["joined_date"] -> React.string }</td>
+        <td>
+            <Icon.G />
+        </td>
     </tr>
 }

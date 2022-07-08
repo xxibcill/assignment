@@ -18,6 +18,7 @@ let make = () => {
                 <th>{"Username" -> React.string}</th>
                 <th>{"Password" -> React.string}</th>
                 <th>{"Joined Date" -> React.string}</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>

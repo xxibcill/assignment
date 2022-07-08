@@ -1,7 +1,7 @@
 
 type contextType = (string, (string => string) => unit)
  
-let initialValue:contextType = ("",(f) => ())
+let initialValue:contextType = ("",(_) => ())
 let context = React.createContext(initialValue)
 
 module Provider = {

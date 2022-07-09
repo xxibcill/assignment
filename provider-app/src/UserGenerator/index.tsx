@@ -3,7 +3,7 @@ import { useUserGenerator } from './logic'
 import UserView from './UserView'
 
 export const UserGenerator: React.FC = () => {
-  const { generate, userinfo } = useUserGenerator()
+  const { generate, userinfo, total } = useUserGenerator()
 
   return (
     <>
@@ -17,6 +17,7 @@ export const UserGenerator: React.FC = () => {
           password={userinfo.password}
           profile_image={userinfo.profile_image}
           joined_date={userinfo.joined_date as Date}
+          total={total}
         /> 
       }
     </>

@@ -10,11 +10,12 @@ interface UserProps {
   username: string
   password: string
   profile_image: string
-  joined_date: Date | string
+  joined_date: Date
 }
 
 export const useUserGenerator = () => {
   const [userinfo, setUserinfo] = useState<UserProps | null>(null)
+  const [total, setTotal] = useState<number>(0)
   
   const unixtimeToPostgrestimestamp = (date:Date) => moment(date).format("YYYY-MM-DD HH:mm:ss"); 
 
@@ -29,23 +30,32 @@ export const useUserGenerator = () => {
       joined_date: randomDate(new Date(2019, 0, 1), new Date()),
     }
 
+    setUserinfo(user)
+
+    // first insert user to data store
     axios({
       method: 'post',
-      url: 'https://run-sql-xliijuge3q-dt.a.run.app/insert',
+      url: 'https://run-sql-xliijuge3q-dt.a.run.app/user',
       data: {...user,joined_date: unixtimeToPostgrestimestamp(user.joined_date as Date)}
     })
-    .then((response)=>{
-      console.log(response);
-    })
-    .catch((error)=>{
-      console.log(error);
-    })
+      .then(()=>{
+        // then get number of total users
+        axios({
+          method: 'get',
+          url: 'https://run-sql-xliijuge3q-dt.a.run.app/count',
+          data: {...user,joined_date: unixtimeToPostgrestimestamp(user.joined_date as Date)}
+        })
+        .then((response) => {
+          console.log(response);
+          setTotal(response.data.count)
+        });
+      })
 
-    setUserinfo(user)
   }
 
   return {
     generate,
     userinfo,
+    total
   }
 }

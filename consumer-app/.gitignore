@@ -28,3 +28,7 @@ dist-ssr
 /lib/
 .bsb.lock
 .merlin
+
+.firebase
+.firebaserc
+firebase.json

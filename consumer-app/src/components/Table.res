@@ -1,17 +1,9 @@
 %%raw("require('./Table.css')")
 
-type user = {
-  "id": string,
-  "username": string,
-  "password": string,
-  "profile_image": string,
-  "joined_date": string,
-};
-
 @react.component
 let make = () => {
 
-    let (data,deleteUser) = Utils.useDataController()
+    let (data,updateUser,deleteUser) = Utils.useDataController()
 
     <table id="users">
         <thead>
@@ -26,7 +18,7 @@ let make = () => {
             </tr>
         </thead>
         <tbody>
-            {data -> Belt.Array.map((user) => <Row deleteUser key={user["id"]} user/>) -> React.array}
+            {data -> Belt.Array.map((user) => <Row updateUser deleteUser key={user["id"]} user/>) -> React.array}
         </tbody>
 
         // <tfoot>

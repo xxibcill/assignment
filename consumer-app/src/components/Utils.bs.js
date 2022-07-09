@@ -5,13 +5,14 @@ var Curry = require("rescript/lib/js/curry.js");
 var Axios = require("axios");
 var React = require("react");
 var $$Promise = require("reason-promise/src/js/promise.bs.js");
+var Belt_Array = require("rescript/lib/js/belt_Array.js");
 
-function useDataConsumer(param) {
+function useDataController(param) {
   var match = React.useState(function () {
         return [];
       });
   var setData = match[1];
-  var getUsers = function (param) {
+  var fetchUsers = function (param) {
     $$Promise.tapError($$Promise.tapOk($$Promise.Js.toResult(Axios.get("https://run-sql-xliijuge3q-dt.a.run.app/limit?limit=10", undefined)), (function (res) {
                 return Curry._1(setData, res.data.users);
               })), (function (err) {
@@ -26,11 +27,87 @@ function useDataConsumer(param) {
     
   };
   React.useEffect((function () {
-          getUsers(undefined);
+          fetchUsers(undefined);
           
         }), []);
-  return match[0];
+  var deleteUser = function (id) {
+    var config = {
+      data: {
+        id: id
+      }
+    };
+    $$Promise.tapOk($$Promise.Js.toResult(Axios.delete("https://run-sql-xliijuge3q-dt.a.run.app/user", config)), (function (param) {
+            console.log(param.data);
+            return fetchUsers(undefined);
+          }));
+    
+  };
+  var updateUser = function (data) {
+    var config = {};
+    $$Promise.tapOk($$Promise.Js.toResult(Axios.patch("https://run-sql-xliijuge3q-dt.a.run.app/user", data, config)), (function (param) {
+            console.log(param.data);
+            return fetchUsers(undefined);
+          }));
+    
+  };
+  return [
+          match[0],
+          updateUser,
+          deleteUser
+        ];
 }
 
-exports.useDataConsumer = useDataConsumer;
+function unwrapOption(opt) {
+  if (opt !== undefined) {
+    return opt;
+  } else {
+    return "";
+  }
+}
+
+var partial_arg = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec"
+];
+
+function getShortMonthName(param) {
+  return Belt_Array.get(partial_arg, param);
+}
+
+function dateString(date) {
+  return String(date.getDate());
+}
+
+function monthString(date) {
+  return getShortMonthName(date.getMonth() | 0);
+}
+
+function yearString(date) {
+  return String(date.getFullYear());
+}
+
+function formatDate(date) {
+  var opt = getShortMonthName(date.getMonth() | 0);
+  return String(date.getDate()) + " " + (
+          opt !== undefined ? opt : ""
+        ) + " " + String(date.getFullYear());
+}
+
+exports.useDataController = useDataController;
+exports.unwrapOption = unwrapOption;
+exports.getShortMonthName = getShortMonthName;
+exports.dateString = dateString;
+exports.monthString = monthString;
+exports.yearString = yearString;
+exports.formatDate = formatDate;
 /* axios Not a pure module */

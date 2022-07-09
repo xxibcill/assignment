@@ -7,9 +7,9 @@ var React = require("react");
 var Css = require("@emotion/css");
 
 var container = Css.css({
-      minWidth: "100vw",
-      minHeight: "100vh",
-      padding: "30px",
+      minWidth: "100%",
+      minHeight: "100%",
+      padding: "30px 0px",
       display: "flex",
       justifyContent: "center",
       alignItems: "center"

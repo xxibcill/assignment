@@ -129,7 +129,7 @@ func serveUsersAll(c *gin.Context) {
 }
 
 func getAllUsers(db *sql.DB) ([]User, error) {
-	queryString := "SELECT * FROM USERS"
+	queryString := "SELECT * FROM USERS order by joined_date desc"
 	row, err := db.Query(queryString)
 	if err != nil {
 		log.Fatal(err)
@@ -225,18 +225,19 @@ func updateUser(c *gin.Context) {
 		fmt.Println(e)
 	}
 	// check if id provided
-	if len(user.Id) > 0 {
+	if len(user.Id) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "id must be provided"})
+	} else {
+		querystring := getUpdateQuery(user)
+		_, err := db.Exec(querystring, user.Id)
+
+		if err != nil {
+			log.Printf("saveVote: unable to update user: %v", err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Success", "method": "updateUser"})
 	}
 
-	querystring := getUpdateQuery(user)
-	_, err := db.Exec(querystring, user.Id)
-
-	if err != nil {
-		log.Printf("saveVote: unable to update user: %v", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
-	}
-	c.JSON(http.StatusOK, gin.H{"message": "Success", "method": "updateUser"})
 }
 
 func deleteUser(c *gin.Context) {
@@ -249,14 +250,15 @@ func deleteUser(c *gin.Context) {
 	// check if id provided
 	if len(user.Id) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "id must be provided"})
+	} else {
+		querystring := "DELETE FROM USERS WHERE id=$1"
+		_, err := db.Exec(querystring, user.Id)
+
+		if err != nil {
+			log.Printf("saveVote: unable to delete user: %v", err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Success", "method": "deleteUser"})
 	}
 
-	querystring := "DELETE FROM USERS WHERE id=$1"
-	_, err := db.Exec(querystring, user.Id)
-
-	if err != nil {
-		log.Printf("saveVote: unable to delete user: %v", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
-	}
-	c.JSON(http.StatusOK, gin.H{"message": "Success", "method": "deleteUser"})
 }

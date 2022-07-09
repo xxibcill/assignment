@@ -22,3 +22,8 @@
     background-color: #4520E6;
     color: white;
 }
+
+.textfield{
+    display: flex;
+    flex-direction: column;
+}

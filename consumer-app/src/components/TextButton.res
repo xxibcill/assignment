@@ -1,5 +1,5 @@
 @react.component
-let make = (~children:React.element,~color="#000000") => {
+let make = (~children:React.element,~color="#000000",~onClick) => {
 
     let buttonStyle = Emotion.css({
         "border": "0px",
@@ -13,5 +13,5 @@ let make = (~children:React.element,~color="#000000") => {
         }
     })
 
-    <button className={buttonStyle}> {children} </button>
+    <button onClick className={buttonStyle}> {children} </button>
 }

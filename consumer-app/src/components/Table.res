@@ -11,7 +11,7 @@ type user = {
 @react.component
 let make = () => {
 
-    let (data) = Utils.useDataConsumer()
+    let (data,deleteUser) = Utils.useDataController()
 
     <table id="users">
         <thead>
@@ -26,7 +26,7 @@ let make = () => {
             </tr>
         </thead>
         <tbody>
-            {data -> Belt.Array.map((user) => <Row user/>) -> React.array}
+            {data -> Belt.Array.map((user) => <Row deleteUser key={user["id"]} user/>) -> React.array}
         </tbody>
 
         // <tfoot>

@@ -1,18 +1,37 @@
 
-type contextType = (string, (string => string) => unit)
- 
-let initialValue:contextType = ("",(_) => ())
-let context = React.createContext(initialValue)
 
-module Provider = {
-    let provider = React.Context.provider(context)
+let useDataConsumer = () => {
+    let (data, setData) = React.useState(_ => [])
 
-    @react.component
-    let make = (~value, ~children) => {
-        React.createElement(provider, {"value": value, "children": children})
+    let getUsers = () => {
+        Axios.get("https://run-sql-xliijuge3q-dt.a.run.app/limit?limit=10", ())
+        ->Promise.Js.toResult
+        ->Promise.tapOk((res) => setData(res.data["users"]))
+        ->Promise.tapError(err => {
+            switch (err.response) {
+                | Some({status: 404}) => Js.log("Not found")
+                | e => Js.log2("an error occured", e)
+            }
+        })
+        ->ignore
     }
-}
 
-let useCalculator = () => {
-    React.useContext(context)
+    // Runs only once right after mounting the component
+    React.useEffect0(() => {
+        // Run effects
+        getUsers()
+        None // or Some(() => {})
+    })
+
+    // Js.log(getUsers())
+
+    // let prev = () => {
+        
+    // }
+
+    // let next = () => {
+
+    // }
+
+    (data)
 }

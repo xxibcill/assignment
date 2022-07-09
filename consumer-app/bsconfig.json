@@ -11,7 +11,9 @@
   },
   "suffix": ".bs.js",
   "bs-dependencies": [
-    "@rescript/react"
+    "@rescript/react",
+    "rescript-axios",
+    "reason-promise"
   ],
   "warnings": {
     "error" : "+101"

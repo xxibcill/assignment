@@ -10,6 +10,9 @@ type user = {
 
 @react.component
 let make = () => {
+
+    let (data) = Utils.useDataConsumer()
+
     <table id="users">
         <thead>
             <tr>
@@ -23,7 +26,7 @@ let make = () => {
             </tr>
         </thead>
         <tbody>
-            {MockData.data -> Belt.Array.map((user) => <Row user/>) -> React.array}
+            {data -> Belt.Array.map((user) => <Row user/>) -> React.array}
         </tbody>
 
         // <tfoot>

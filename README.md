@@ -167,7 +167,6 @@ data: {
 request example
 
 ```shell
-
 curl --location --request POST 'https://run-sql-xliijuge3q-dt.a.run.app/user' \
 --header 'Content-Type: application/json' \
 --data-raw '{

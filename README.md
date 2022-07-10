@@ -41,7 +41,7 @@ curl --location --request GET 'https://run-sql-xliijuge3q-dt.a.run.app/all'
 ```
 
 result example 
-```json
+```yaml
 {
     "message": "Success",
     "method": "serveUsersAll",
@@ -91,7 +91,7 @@ curl --location --request GET 'https://run-sql-xliijuge3q-dt.a.run.app/limit
 ```
 
 result example
-```json
+```yaml
 {
     "message": "Success",
     "method": "serveUsersLimit",
@@ -139,7 +139,7 @@ curl --location --request GET 'https://run-sql-xliijuge3q-dt.a.run.app/count
 ```
 
 result example
-```json
+```yaml
 {
 	"message": "Success"
     "count": 39,
@@ -180,7 +180,7 @@ curl --location --request POST 'https://run-sql-xliijuge3q-dt.a.run.app/user
 ```
 
 result example
-```json
+```yaml
 {
     "message": "Success",
     "method": "insertUsers"
@@ -220,7 +220,7 @@ curl --location --request PATCH 'https://run-sql-xliijuge3q-dt.a.run.app/use
 
 result example
 
-```json
+```yaml
 {
     "message": "Success",
     "method": "updateUser"
@@ -252,7 +252,7 @@ curl --location --request DELETE 'https://run-sql-xliijuge3q-dt.a.run.app/us
 
 result example
 
-```json
+```yaml
 {
     "message": "Success",
     "method": "deleteUser"

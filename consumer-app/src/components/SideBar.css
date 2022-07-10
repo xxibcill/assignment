@@ -1,0 +1,34 @@
+#sidebar {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    height: 100%;
+    margin: 0px 50px;
+}
+
+#refresh-button{
+    padding: 15px;
+    border: 1px solid #4520E6;
+    background-color: #FFFFFF;
+    color: #4520E6;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#refresh-button:hover{
+    background-color: #4520E6;
+    color: #FFFFFF;
+}
+
+#total-users{
+    margin: 10px 0px;
+    font-size: 18px;
+    text-align: center;
+}
+
+#total-users span{
+    font-size: 45px;
+    font-weight: 600;
+}

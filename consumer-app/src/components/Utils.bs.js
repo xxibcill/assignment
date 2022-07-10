@@ -12,8 +12,12 @@ function useDataController(param) {
         return [];
       });
   var setData = match[1];
+  var match$1 = React.useState(function () {
+        return 0;
+      });
+  var setCount = match$1[1];
   var fetchUsers = function (param) {
-    $$Promise.tapError($$Promise.tapOk($$Promise.Js.toResult(Axios.get("https://run-sql-xliijuge3q-dt.a.run.app/limit?limit=10", undefined)), (function (res) {
+    $$Promise.tapError($$Promise.tapOk($$Promise.Js.toResult(Axios.get("https://run-sql-xliijuge3q-dt.a.run.app/all", undefined)), (function (res) {
                 return Curry._1(setData, res.data.users);
               })), (function (err) {
             var e = err.response;
@@ -26,8 +30,27 @@ function useDataController(param) {
           }));
     
   };
+  var getCount = function (param) {
+    $$Promise.tapError($$Promise.tapOk($$Promise.Js.toResult(Axios.get("https://run-sql-xliijuge3q-dt.a.run.app/count", undefined)), (function (res) {
+                return Curry._1(setCount, res.data.count);
+              })), (function (err) {
+            var e = err.response;
+            if (e !== undefined && e.status === 404) {
+              console.log("Not found");
+            } else {
+              console.log("an error occured", e);
+            }
+            
+          }));
+    
+  };
+  var refresh = function (param) {
+    fetchUsers(undefined);
+    return getCount(undefined);
+  };
   React.useEffect((function () {
           fetchUsers(undefined);
+          getCount(undefined);
           
         }), []);
   var deleteUser = function (id) {
@@ -38,7 +61,8 @@ function useDataController(param) {
     };
     $$Promise.tapOk($$Promise.Js.toResult(Axios.delete("https://run-sql-xliijuge3q-dt.a.run.app/user", config)), (function (param) {
             console.log(param.data);
-            return fetchUsers(undefined);
+            fetchUsers(undefined);
+            return getCount(undefined);
           }));
     
   };
@@ -46,12 +70,15 @@ function useDataController(param) {
     var config = {};
     $$Promise.tapOk($$Promise.Js.toResult(Axios.patch("https://run-sql-xliijuge3q-dt.a.run.app/user", data, config)), (function (param) {
             console.log(param.data);
-            return fetchUsers(undefined);
+            fetchUsers(undefined);
+            return getCount(undefined);
           }));
     
   };
   return [
           match[0],
+          match$1[0],
+          refresh,
           updateUser,
           deleteUser
         ];

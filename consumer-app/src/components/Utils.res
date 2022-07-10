@@ -2,10 +2,11 @@ open Types
 
 let useDataController = () => {
     let (data, setData) = React.useState(_ => [])
+    let (count, setCount) = React.useState(_ => 0)
 
     // fetch all users from data store
     let fetchUsers = () => {
-        Axios.get("https://run-sql-xliijuge3q-dt.a.run.app/limit?limit=10", ())
+        Axios.get("https://run-sql-xliijuge3q-dt.a.run.app/all", ())
         -> Promise.Js.toResult
         -> Promise.tapOk((res) => setData(res.data["users"]))
         -> Promise.tapError(err => {
@@ -17,10 +18,34 @@ let useDataController = () => {
         ->ignore
     }
 
+    // fetch number of users from data store
+    let getCount = () => {
+        Axios.get("https://run-sql-xliijuge3q-dt.a.run.app/count", ())
+        -> Promise.Js.toResult
+        -> Promise.tapOk((res) => setCount(res.data["count"]))
+        -> Promise.tapError(err => {
+            switch (err.response) {
+                | Some({status: 404}) => Js.log("Not found")
+                | e => Js.log2("an error occured", e)
+            }
+        })
+        ->ignore
+    }
+
+    // get data from data store and update to local state
+    let refresh = () => {
+        // fetch new users data when delete succeed
+        fetchUsers()
+        // fetch number of user
+        getCount()
+    }
+
     // Runs only once right after mounting the component
     React.useEffect0(() => {
         // Run effects
         fetchUsers()
+        // fetch number of user
+        getCount()
         None
     })
 
@@ -34,8 +59,9 @@ let useDataController = () => {
             -> Promise.Js.toResult
             -> Promise.tapOk(({data}) => {
                 Js.log(data)
-                // fetch new users data when delete succeed
-                fetchUsers()
+
+                // update local state
+                refresh()
             })
             ->ignore
     }
@@ -49,24 +75,24 @@ let useDataController = () => {
             -> Promise.Js.toResult
             -> Promise.tapOk(({data}) => {
                 Js.log(data)
-                // fetch new users data when delete succeed
-                fetchUsers()
+
+                // update local state
+                refresh()
             })
             ->ignore
     }
 
     // functions for pagination
     // let prev = () => {
-        
     // }
 
     // let next = () => {
-
     // }
 
-    (data,updateUser,deleteUser)
+    (data,count,refresh,updateUser,deleteUser)
 }
 
+// unwrap Option<string> to string
 let unwrapOption = (opt) => {
     switch opt {
         | Some(n) => n
@@ -74,6 +100,7 @@ let unwrapOption = (opt) => {
     }
 }
 
+// format date function
 let getShortMonthName = [
     "Jan",
     "Feb",

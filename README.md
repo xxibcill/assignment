@@ -60,9 +60,9 @@ result example
             "profile_image": "https://api.lorem.space/image/face?w=150&h=150&hash=rhwjagbx",
             "joined_date": "2021-08-26T22:29:43Z"
         },
-		.
-		.
-		.
+.
+.
+.
         {
             "id": "usercl5dmpupr000b3a6aoa9ypmtu",
             "username": "Viva.Wiegand50",
@@ -110,9 +110,9 @@ result example
             "profile_image": "https://api.lorem.space/image/face?w=150&h=150&hash=rhwjagbx",
             "joined_date": "2021-08-26T22:29:43Z"
         },
-		.
-		.
-		.
+.
+.
+.
         {
             "id": "usercl5dmpupr000b3a6aoa9ypmtu",
             "username": "Viva.Wiegand50",

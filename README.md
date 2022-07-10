@@ -1,5 +1,13 @@
 # Band Protocol | Full Stack Assignment
 
+## Demo
+
+data-generated app
+https://provider.chayanin.dev
+
+data-consumed app
+https://consumer.chayanin.dev
+
 #### This Project consist of 3 separated part
 
 	1. Remote Data Store and API server
